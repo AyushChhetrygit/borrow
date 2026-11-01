@@ -7,7 +7,7 @@ import {
   Handshake,
   Plug,
   Trophy,
-  Truck,
+  MapPin,
   Wallet,
   Zap,
 } from "lucide-react";
@@ -29,15 +29,15 @@ const CAT_ICON: Record<CategoryId, typeof BookOpen> = {
 
 const BENEFITS = [
   { icon: Wallet, title: "Affordable rentals", text: "Pay a few rupees a day instead of buying something you will use twice." },
-  { icon: Zap, title: "Quick delivery", text: "Most items reach your hostel or campus spot in 15–50 minutes." },
+  { icon: MapPin, title: "Convenient pickup", text: "Collect your reserved item from the campus location you choose." },
   { icon: Handshake, title: "Convenient borrowing", text: "Pick an item, choose the days, order. The deposit comes back when you return it." },
 ];
 
 const STEPS = [
   ["Explore essentials", "Browse the catalogue or jump into a category."],
   ["Select what you need", "Check price, deposit and availability on the product page."],
-  ["Choose duration and order", "Pick the number of days, add your hostel details, confirm."],
-  ["Get it delivered", "We bring it to your hostel or campus."],
+  ["Choose duration and order", "Pick the number of days and select your pickup location."],
+  ["Pick it up", "We’ll let you know when your item is ready to collect."],
   ["Return it after use", "Hand it back and your deposit is refunded after inspection."],
 ];
 
@@ -65,13 +65,13 @@ export default function Home() {
         <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-14 sm:px-6 md:py-20 lg:grid-cols-[1.05fr_1fr]">
           <div>
             <p className="inline-flex items-center gap-2 rounded-full bg-forest px-3.5 py-1.5 text-sm font-semibold text-gold">
-              <Truck className="h-4 w-4" /> Delivered to your hostel in under an hour
+              <MapPin className="h-4 w-4" /> Choose a pickup point that works for you
             </p>
             <h1 className="mt-5 text-5xl font-extrabold leading-[1.02] sm:text-6xl lg:text-7xl">
               Need It Now? Just Borrow It.
             </h1>
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-forest/80">
-              Your everyday campus essentials, delivered when you need them. No unnecessary purchases. Just convenient,
+              Your everyday campus essentials, ready to pick up when you need them. No unnecessary purchases. Just convenient,
               affordable borrowing.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -119,7 +119,7 @@ export default function Home() {
                 <div className="h-full w-2/3 rounded-full bg-sage" />
               </div>
               <p className="mt-2 flex items-center gap-1.5 text-xs font-medium text-forest/70">
-                <Truck className="h-3.5 w-3.5 animate-ride" /> Arriving in 15–20 min
+                <MapPin className="h-3.5 w-3.5" /> Ready for campus pickup
               </p>
             </div>
           </div>

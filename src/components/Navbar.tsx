@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { LayoutDashboard, Menu, ShoppingBag, X } from "lucide-react";
+import { Menu, ShoppingBag, X } from "lucide-react";
 import { Logo } from "./Logo";
 import { useStore } from "../context/StoreContext";
 import { ACTIVE_STATUSES } from "../utils";
@@ -53,9 +53,7 @@ export function Navbar() {
               </span>
             )}
           </Link>
-          <Link to="/admin" className="btn-outline btn-sm hidden sm:inline-flex" title="Demo only – no login required">
-            <LayoutDashboard className="h-4 w-4" /> Admin Dashboard
-          </Link>
+          {/* Admin dashboard link intentionally hidden from the public site. */}
           <button className="rounded-full p-2.5 hover:bg-cream lg:hidden" onClick={() => setOpen((o) => !o)} aria-label="Toggle menu" aria-expanded={open}>
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -73,9 +71,7 @@ export function Navbar() {
             <Link to="/orders" className="rounded-xl px-3 py-3 text-base font-semibold hover:bg-cream">
               My orders {activeMine > 0 && `(${activeMine} active)`}
             </Link>
-            <Link to="/admin" className="btn-primary mt-2">
-              <LayoutDashboard className="h-4 w-4" /> Admin Dashboard (demo)
-            </Link>
+            {/* Admin dashboard link intentionally hidden from the public site. */}
           </div>
         </nav>
       )}

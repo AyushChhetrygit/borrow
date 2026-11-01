@@ -99,11 +99,11 @@ export default function Overview() {
         <StatCard label="Available items" value={stats.available} icon={<PackageCheck className="h-5 w-5" />} tone="sage" />
         <StatCard label="Active orders" value={stats.active} icon={<Truck className="h-5 w-5" />} tone="gold" />
         <StatCard label="Pending orders" value={stats.pending} icon={<Clock3 className="h-5 w-5" />} />
-        <StatCard label="Delivered orders" value={stats.delivered} icon={<CheckCheck className="h-5 w-5" />} />
+        <StatCard label="Picked-up orders" value={stats.delivered} icon={<CheckCheck className="h-5 w-5" />} />
         <StatCard label="Out-of-stock products" value={stats.outOfStock} icon={<AlertTriangle className="h-5 w-5" />} />
       </div>
       <p className="mt-2 text-xs text-forest/55">
-        Pending = not yet out for delivery. Delivered includes returned. Out-of-stock includes unavailable and under-maintenance items.
+        Pending = not yet ready for pickup. Picked-up includes returned. Out-of-stock includes unavailable and under-maintenance items.
       </p>
 
       <div className="mt-6 grid gap-4 lg:grid-cols-2">

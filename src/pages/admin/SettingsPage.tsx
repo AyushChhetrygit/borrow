@@ -22,7 +22,6 @@ export default function SettingsPage() {
   const save = (e: React.FormEvent) => {
     e.preventDefault();
     if (!f.businessName.trim()) return setError("Business name can’t be empty.");
-    if (f.defaultDeliveryMax < f.defaultDeliveryMin) return setError("Maximum delivery time must be at least the minimum.");
     if (f.lateFeePerDay < 0) return setError("Late fee can’t be negative.");
     updateSettings({ ...f, businessName: f.businessName.trim(), tagline: f.tagline.trim() });
     setSaved(true);
@@ -40,15 +39,7 @@ export default function SettingsPage() {
           <label className="label" htmlFor="tg">Brand tagline</label>
           <input id="tg" className="input" value={f.tagline} onChange={(e) => set("tagline", e.target.value)} />
         </div>
-        <div className="sm:col-span-2">
-          <p className="label">Default delivery estimate (used for new products)</p>
-          <div className="flex items-center gap-2 text-sm">
-            <input type="number" min="5" className="input !w-24" aria-label="Minimum minutes" value={f.defaultDeliveryMin} onChange={(e) => set("defaultDeliveryMin", Number(e.target.value))} />
-            <span>to</span>
-            <input type="number" min="5" className="input !w-24" aria-label="Maximum minutes" value={f.defaultDeliveryMax} onChange={(e) => set("defaultDeliveryMax", Number(e.target.value))} />
-            <span>minutes</span>
-          </div>
-        </div>
+        <div className="sm:col-span-2 rounded-2xl bg-cream/60 p-4 text-sm text-forest/75">Customers choose a pickup point at checkout. Use the Orders page to mark an order ready for pickup, then picked up.</div>
         <div>
           <label className="label" htmlFor="lf">Default late return penalty (₹ per day)</label>
           <input id="lf" type="number" min="0" className="input" value={f.lateFeePerDay} onChange={(e) => set("lateFeePerDay", Number(e.target.value))} />

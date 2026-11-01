@@ -33,7 +33,7 @@ const KEYS = {
 } as const;
 
 const CATALOGUE_RELEASE_KEY = "borrow.catalogue.release";
-const CATALOGUE_RELEASE = 3;
+const CATALOGUE_RELEASE = 4;
 
 /* ---------- safe localStorage helpers ---------- */
 
@@ -117,9 +117,20 @@ function loadProducts(fallback: Product[]): Product[] {
   const release = num(readJSON<number>(CATALOGUE_RELEASE_KEY));
   const products = release < CATALOGUE_RELEASE
     ? [
-        ...saved.map((product) =>
-          product.id === "P001" || product.id === "P002" ? { ...product, category: "electronics" as const } : product
-        ),
+        ...saved.map((product) => {
+          const seed = fallback.find((candidate) => candidate.id === product.id);
+          return seed
+            ? {
+                ...product,
+                category: seed.category,
+                dailyPrice: seed.dailyPrice,
+                weeklyPrice: seed.weeklyPrice,
+                deposit: seed.deposit,
+                replacementValue: seed.replacementValue,
+                totalStock: seed.totalStock,
+              }
+            : product;
+        }),
         ...fallback.filter((seed) => !saved.some((product) => product.id === seed.id)),
       ]
     : (saved.length ? saved : fallback);
@@ -138,7 +149,11 @@ function loadOrders(fallback: Order[]): Order[] {
 function loadSettings(): Settings {
   const raw = readJSON<Partial<Settings>>(KEYS.settings);
   if (!raw || typeof raw !== "object") return { ...DEFAULT_SETTINGS };
-  return { ...DEFAULT_SETTINGS, ...raw };
+  const settings = { ...DEFAULT_SETTINGS, ...raw };
+  if (typeof raw.rentalPolicy === "string" && raw.rentalPolicy.includes("Delivery:")) {
+    settings.rentalPolicy = DEFAULT_SETTINGS.rentalPolicy;
+  }
+  return settings;
 }
 function loadMine(): string[] {
   const raw = readJSON<unknown[]>(KEYS.mine);

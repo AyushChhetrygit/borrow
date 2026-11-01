@@ -30,7 +30,7 @@ export function Footer() {
         <FooterCol title="Company">
           <Link to="/info/about">About {settings.businessName}</Link>
           <Link to="/info/contact">Contact</Link>
-          <Link to="/admin">Admin (demo)</Link>
+          {/* Admin dashboard link intentionally hidden from the public site. */}
         </FooterCol>
         <FooterCol title="Help">
           <Link to="/info/faqs">FAQs</Link>

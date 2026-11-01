@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Clock, Minus, Plus, ShieldCheck, Truck } from "lucide-react";
+import { ArrowLeft, MapPin, Minus, Plus, ShieldCheck } from "lucide-react";
 import { useStore } from "../../context/StoreContext";
 import { ProductImage } from "../../components/ProductArt";
-import { calcRentalFee, canRent, etaText, inr } from "../../utils";
+import { calcRentalFee, canRent, inr, PICKUP_LOCATIONS } from "../../utils";
 import { DURATIONS } from "./ProductDetail";
 
 const LAST_KEY = "borrow.lastCustomer.v1";
@@ -26,8 +26,7 @@ export default function Checkout() {
   const last = loadLast();
   const [name, setName] = useState(last.name ?? "");
   const [phone, setPhone] = useState(last.phone ?? "");
-  const [hostel, setHostel] = useState(last.hostel ?? "");
-  const [room, setRoom] = useState(last.room ?? "");
+  const [pickupLocation, setPickupLocation] = useState(last.pickupLocation ?? last.hostel ?? "");
   const [days, setDays] = useState(Math.max(1, Number(sp.get("days")) || 3));
   const [qty, setQty] = useState(Math.max(1, Number(sp.get("qty")) || 1));
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -68,8 +67,7 @@ export default function Checkout() {
     const e: Record<string, string> = {};
     if (name.trim().length < 2) e.name = "Enter your full name.";
     if (!/^\d{10}$/.test(phone.replace(/[\s-]/g, ""))) e.phone = "Enter a 10-digit mobile number.";
-    if (hostel.trim().length < 2) e.hostel = "Enter your hostel or campus name.";
-    if (room.trim().length < 1) e.room = "Enter your room number or delivery address.";
+    if (!PICKUP_LOCATIONS.includes(pickupLocation as (typeof PICKUP_LOCATIONS)[number])) e.pickupLocation = "Choose a pickup location.";
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -82,8 +80,8 @@ export default function Checkout() {
       product: p,
       customerName: name,
       phone: phone.replace(/[\s-]/g, ""),
-      hostel,
-      room,
+      hostel: pickupLocation,
+      room: "",
       quantity: q,
       durationDays: days,
     });
@@ -92,7 +90,7 @@ export default function Checkout() {
       return;
     }
     try {
-      localStorage.setItem(LAST_KEY, JSON.stringify({ name, phone, hostel, room }));
+      localStorage.setItem(LAST_KEY, JSON.stringify({ name, phone, pickupLocation }));
     } catch {
       /* ignore */
     }
@@ -106,7 +104,7 @@ export default function Checkout() {
       </Link>
       <h1 className="mt-4 text-4xl font-extrabold">Checkout</h1>
       <p className="mt-1 flex items-center gap-2 text-forest/70">
-        <Clock className="h-4 w-4 text-sage" /> Order now and get it in {etaText(p.deliveryMin, p.deliveryMax)}.
+        <MapPin className="h-4 w-4 text-sage" /> Reserve now, then collect it from your selected pickup location.
       </p>
 
       <form onSubmit={submit} noValidate className="mt-8 grid gap-8 lg:grid-cols-[1.2fr_1fr]">
@@ -147,27 +145,24 @@ export default function Checkout() {
 
           {/* Details */}
           <section className="card space-y-4 p-5">
-            <h2 className="text-lg font-bold">Delivery details</h2>
+            <h2 className="text-lg font-bold">Student and pickup details</h2>
             <Field label="Customer name" id="name" error={errors.name}>
               <input id="name" className="input" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" placeholder="e.g. Aarav Mehta" />
             </Field>
             <Field label="Phone number" id="phone" error={errors.phone}>
               <input id="phone" className="input" inputMode="numeric" value={phone} onChange={(e) => setPhone(e.target.value)} autoComplete="tel" placeholder="10-digit mobile number" />
             </Field>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Hostel / campus name" id="hostel" error={errors.hostel}>
-                <input id="hostel" className="input" value={hostel} onChange={(e) => setHostel(e.target.value)} placeholder="e.g. Tagore Hostel" />
-              </Field>
-              <Field label="Room number or delivery address" id="room" error={errors.room}>
-                <input id="room" className="input" value={room} onChange={(e) => setRoom(e.target.value)} placeholder="e.g. Room 214" />
-              </Field>
-            </div>
-            <label className="flex cursor-pointer items-center gap-3 rounded-2xl border-2 border-forest bg-cream/50 p-4">
-              <input type="radio" checked readOnly className="h-4 w-4 accent-forest" />
-              <Truck className="h-5 w-5 text-forest" />
-              <span className="font-semibold">Deliver to my hostel / campus</span>
+            <Field label="Pickup location" id="pickup-location" error={errors.pickupLocation}>
+              <select id="pickup-location" className="input" value={pickupLocation} onChange={(e) => setPickupLocation(e.target.value)}>
+                <option value="">Choose where you will collect your order</option>
+                {PICKUP_LOCATIONS.map((location) => <option key={location} value={location}>{location}</option>)}
+              </select>
+            </Field>
+            <div className="flex items-center gap-3 rounded-2xl border-2 border-forest bg-cream/50 p-4">
+              <MapPin className="h-5 w-5 text-forest" />
+              <span className="font-semibold">Collect from your selected location</span>
               <span className="ml-auto text-sm font-semibold text-sage">Free</span>
-            </label>
+            </div>
           </section>
         </div>
 
@@ -192,10 +187,9 @@ export default function Checkout() {
               </span>
             </p>
             <div className="mt-4 rounded-2xl bg-forest p-4 text-white">
-              <p className="flex items-center gap-2 text-sm text-gold">
-                <Truck className="h-4 w-4" /> Estimated delivery
-              </p>
-              <p className="font-display text-2xl font-extrabold">{etaText(p.deliveryMin, p.deliveryMax)}</p>
+              <p className="flex items-center gap-2 text-sm text-gold"><MapPin className="h-4 w-4" /> Pickup location</p>
+              <p className="mt-1 font-display text-xl font-extrabold">{pickupLocation || "Choose a location"}</p>
+              <p className="mt-1 text-xs text-white/75">We’ll notify you when your order is ready to collect.</p>
             </div>
             {submitError && (
               <p role="alert" className="mt-4 rounded-xl bg-red-50 p-3 text-sm font-medium text-red-700">

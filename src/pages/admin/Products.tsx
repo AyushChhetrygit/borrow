@@ -3,7 +3,7 @@ import { ImageOff, Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { useStore } from "../../context/StoreContext";
 import { Modal } from "../../components/Modal";
 import { ProductArt, ProductImage } from "../../components/ProductArt";
-import { CATEGORIES, categoryLabel, DELIVERY_PRESETS, inr, rentedQty } from "../../utils";
+import { CATEGORIES, categoryLabel, inr, rentedQty } from "../../utils";
 import type { CategoryId, Condition, Product, ProductStatus } from "../../types";
 import { EmptyRow, PageHeader, TableWrap, td, th, tr } from "./ui";
 
@@ -66,7 +66,7 @@ export default function Products() {
       <TableWrap>
         <thead>
           <tr>
-            {["Product", "Category", "Daily", "Weekly", "Deposit", "Stock", "Delivery", "Available", "Actions"].map((h) => (
+            {["Product", "Category", "Daily", "Weekly", "Deposit", "Stock", "Collection", "Available", "Actions"].map((h) => (
               <th key={h} className={th}>{h}</th>
             ))}
           </tr>
@@ -91,7 +91,7 @@ export default function Products() {
               <td className={td}>{inr(p.weeklyPrice)}</td>
               <td className={td}>{inr(p.deposit)}</td>
               <td className={`${td} whitespace-nowrap`}>{p.availableStock}/{p.totalStock}</td>
-              <td className={`${td} whitespace-nowrap`}>{p.deliveryMin}–{p.deliveryMax} min</td>
+              <td className={`${td} whitespace-nowrap`}>Campus pickup</td>
               <td className={td}>
                 <label className="inline-flex cursor-pointer items-center gap-2">
                   <input
@@ -219,9 +219,6 @@ function ProductForm({
 
   const set = <K extends keyof FormState>(k: K, v: FormState[K]) => setF((s) => ({ ...s, [k]: v }));
 
-  const presetValue = `${f.deliveryMin}-${f.deliveryMax}`;
-  const isPreset = DELIVERY_PRESETS.some((d) => `${d.min}-${d.max}` === presetValue);
-
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     const err: Record<string, string> = {};
@@ -233,7 +230,6 @@ function ProductForm({
     if (!(n(f.deposit) >= 0) || f.deposit === "") err.deposit = "Enter a deposit (0 or more).";
     if (!Number.isInteger(n(f.totalStock)) || n(f.totalStock) < heldQty)
       err.totalStock = heldQty > 0 ? `Whole number, at least ${heldQty} (currently rented).` : "Enter a whole number, 0 or more.";
-    if (f.deliveryMax < f.deliveryMin) err.delivery = "Max time must be at least the min time.";
     setErrors(err);
     if (Object.keys(err).length) return;
     onSave({
@@ -365,30 +361,8 @@ function ProductForm({
             <option value="maintenance">Under maintenance</option>
           </select>
         </div>
-        <div className="sm:col-span-2">
-          <label className="label" htmlFor="pdel">Estimated delivery time</label>
-          <select
-            id="pdel"
-            className="input"
-            value={isPreset ? presetValue : "custom"}
-            onChange={(e) => {
-              if (e.target.value === "custom") return;
-              const [min, max] = e.target.value.split("-").map(Number);
-              setF((s) => ({ ...s, deliveryMin: min, deliveryMax: max }));
-            }}
-          >
-            {DELIVERY_PRESETS.map((d) => (
-              <option key={d.label} value={`${d.min}-${d.max}`}>{d.label}</option>
-            ))}
-            <option value="custom">Custom ({f.deliveryMin}–{f.deliveryMax} min)</option>
-          </select>
-          <div className="mt-2 flex items-center gap-2 text-sm">
-            <input type="number" min="5" className="input !w-24" aria-label="Minimum minutes" value={f.deliveryMin} onChange={(e) => set("deliveryMin", Number(e.target.value))} />
-            <span>to</span>
-            <input type="number" min="5" className="input !w-24" aria-label="Maximum minutes" value={f.deliveryMax} onChange={(e) => set("deliveryMax", Number(e.target.value))} />
-            <span>minutes</span>
-          </div>
-          <Err k="delivery" />
+        <div className="sm:col-span-2 rounded-2xl bg-cream/60 p-4 text-sm text-forest/75">
+          New orders for this item are collected by the student from their selected campus pickup location.
         </div>
 
         <div className="mt-2 flex justify-end gap-2 sm:col-span-2">

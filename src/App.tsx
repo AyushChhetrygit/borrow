@@ -8,13 +8,14 @@ import Checkout from "./pages/customer/Checkout";
 import OrderPage from "./pages/customer/OrderPage";
 import MyOrders from "./pages/customer/MyOrders";
 import Info from "./pages/customer/Info";
-import { AdminLayout } from "./pages/admin/AdminLayout";
-import Overview from "./pages/admin/Overview";
-import Products from "./pages/admin/Products";
-import Inventory from "./pages/admin/Inventory";
-import Orders from "./pages/admin/Orders";
-import Customers from "./pages/admin/Customers";
-import SettingsPage from "./pages/admin/SettingsPage";
+// Admin dashboard code is intentionally retained but not exposed on the public site.
+// import { AdminLayout } from "./pages/admin/AdminLayout";
+// import Overview from "./pages/admin/Overview";
+// import Products from "./pages/admin/Products";
+// import Inventory from "./pages/admin/Inventory";
+// import Orders from "./pages/admin/Orders";
+// import Customers from "./pages/admin/Customers";
+// import SettingsPage from "./pages/admin/SettingsPage";
 
 export default function App() {
   return (
@@ -30,6 +31,8 @@ export default function App() {
           <Route path="/orders" element={<MyOrders />} />
           <Route path="/info/:topic" element={<Info />} />
         </Route>
+        {/* Admin routes are disabled for the public deployment. Keep this block commented to restore later. */}
+        {/*
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Overview />} />
           <Route path="products" element={<Products />} />
@@ -38,6 +41,7 @@ export default function App() {
           <Route path="customers" element={<Customers />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
+        */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>

@@ -3,15 +3,15 @@ import { Eye, Search } from "lucide-react";
 import { useStore } from "../../context/StoreContext";
 import { Modal } from "../../components/Modal";
 import { StatusBadge } from "../../components/StatusBadge";
-import { etaText, formatDate, inr, STATUS_LABEL } from "../../utils";
+import { formatDate, inr, STATUS_LABEL } from "../../utils";
 import type { Order, OrderStatus } from "../../types";
 import { EmptyRow, PageHeader, TableWrap, td, th, tr } from "./ui";
 
 const ACTIONS: { status: OrderStatus; label: string }[] = [
   { status: "confirmed", label: "Confirm order" },
   { status: "preparing", label: "Mark as Preparing" },
-  { status: "out_for_delivery", label: "Mark as Out for Delivery" },
-  { status: "delivered", label: "Mark as Delivered" },
+  { status: "out_for_delivery", label: "Mark as Ready for Pickup" },
+  { status: "delivered", label: "Mark as Picked Up" },
   { status: "returned", label: "Mark as Returned" },
   { status: "cancelled", label: "Cancel order" },
 ];
@@ -63,13 +63,13 @@ export default function Orders() {
       <TableWrap>
         <thead>
           <tr>
-            {["Order ID", "Customer", "Phone", "Product", "Qty", "Date", "Delivery address", "Days", "Rental fee", "Deposit", "Estimate", "Status", "Actions"].map((h) => (
+            {["Order ID", "Customer", "Phone", "Product", "Qty", "Date", "Pickup location", "Days", "Rental fee", "Deposit", "Status", "Actions"].map((h) => (
               <th key={h} className={th}>{h}</th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {list.length === 0 && <EmptyRow cols={13} text="No orders match these filters." />}
+          {list.length === 0 && <EmptyRow cols={12} text="No orders match these filters." />}
           {list.map((o) => (
             <tr key={o.id} className={tr}>
               <td className={`${td} whitespace-nowrap font-semibold`}>{o.id}</td>
@@ -78,11 +78,10 @@ export default function Orders() {
               <td className={`${td} whitespace-nowrap`}>{o.productName}</td>
               <td className={td}>{o.quantity}</td>
               <td className={`${td} whitespace-nowrap`}>{formatDate(o.createdAt)}</td>
-              <td className={`${td} whitespace-nowrap`}>{o.room}, {o.hostel}</td>
+              <td className={`${td} whitespace-nowrap`}>{o.hostel}</td>
               <td className={td}>{o.durationDays}</td>
               <td className={td}>{inr(o.rentalFee)}</td>
               <td className={td}>{inr(o.deposit)}</td>
-              <td className={`${td} whitespace-nowrap`}>{etaText(o.deliveryMin, o.deliveryMax)}</td>
               <td className={td}><StatusBadge status={o.status} /></td>
               <td className={td}>
                 <div className="flex items-center gap-1.5">
@@ -121,8 +120,7 @@ export default function Orders() {
                 ["Phone", viewing.phone],
                 ["Product", `${viewing.productName} × ${viewing.quantity}`],
                 ["Rental duration", `${viewing.durationDays} day(s)`],
-                ["Delivery address", `${viewing.room}, ${viewing.hostel}`],
-                ["Delivery estimate", etaText(viewing.deliveryMin, viewing.deliveryMax)],
+                ["Pickup location", viewing.hostel],
                 ["Rental fee", inr(viewing.rentalFee)],
                 ["Refundable deposit", inr(viewing.deposit)],
                 ["Total", inr(viewing.total)],

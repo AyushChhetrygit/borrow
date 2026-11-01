@@ -10,10 +10,19 @@ export const CATEGORIES: { id: CategoryId; label: string; blurb: string }[] = [
   { id: "rain", label: "Rain & Daily Needs", blurb: "Umbrellas and raincoats for campus" },
 ];
 
+export const PICKUP_LOCATIONS = [
+  "Covie PG",
+  "Tribe PG",
+  "Girls Hostel (Daisy and Orchid)",
+  "Boys Hostel (Kopou)",
+  "Old SVC Campus",
+  "New SVC Campus",
+] as const;
+
 export const categoryLabel = (id: CategoryId) =>
   CATEGORIES.find((c) => c.id === id)?.label ?? id;
 
-/** Delivery presets used in the product form */
+/** Legacy timing values retained only for existing product records. */
 export const DELIVERY_PRESETS = [
   { label: "Nearby · 15–20 min", min: 15, max: 20 },
   { label: "Regular · 25–35 min", min: 25, max: 35 },
@@ -24,8 +33,8 @@ export const STATUS_LABEL: Record<OrderStatus, string> = {
   pending: "Pending",
   confirmed: "Order confirmed",
   preparing: "Preparing",
-  out_for_delivery: "Out for delivery",
-  delivered: "Delivered",
+  out_for_delivery: "Ready for pickup",
+  delivered: "Picked up",
   returned: "Returned",
   cancelled: "Cancelled",
 };

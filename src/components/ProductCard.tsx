@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Clock, Zap } from "lucide-react";
+import { MapPin } from "lucide-react";
 import type { Product } from "../types";
-import { availabilityOf, canRent, categoryLabel, etaText, inr } from "../utils";
+import { availabilityOf, canRent, categoryLabel, inr } from "../utils";
 import { ProductImage } from "./ProductArt";
 
 const TONE = {
@@ -23,7 +23,7 @@ export function ProductCard({ product: p, imageMotion = false }: { product: Prod
           </div>
         </div>
         <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-forest px-2.5 py-1 text-xs font-semibold text-gold">
-          <Zap className="h-3 w-3" /> {etaText(p.deliveryMin, p.deliveryMax)}
+          <MapPin className="h-3 w-3" /> Pickup
         </span>
       </Link>
       <div className="flex flex-1 flex-col p-4">
@@ -38,9 +38,7 @@ export function ProductCard({ product: p, imageMotion = false }: { product: Prod
           </p>
           <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${TONE[a.tone]}`}>{a.label}</span>
         </div>
-        <p className="mt-2 flex items-center gap-1.5 text-xs text-forest/60">
-          <Clock className="h-3.5 w-3.5" /> Delivery in {etaText(p.deliveryMin, p.deliveryMax)}
-        </p>
+        <p className="mt-2 flex items-center gap-1.5 text-xs text-forest/60"><MapPin className="h-3.5 w-3.5" /> Collect from a campus pickup point</p>
         <div className="mt-4 flex gap-2">
           <button
             className="btn-primary flex-1"

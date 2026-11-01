@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, BadgeCheck, Clock, Minus, Plus, ShieldCheck, Zap } from "lucide-react";
+import { ArrowLeft, BadgeCheck, MapPin, Minus, Plus, ShieldCheck } from "lucide-react";
 import { useStore } from "../../context/StoreContext";
 import { ProductImage } from "../../components/ProductArt";
-import { availabilityOf, calcRentalFee, canRent, categoryLabel, etaText, inr } from "../../utils";
+import { availabilityOf, calcRentalFee, canRent, categoryLabel, inr } from "../../utils";
 
 export const DURATIONS = [1, 2, 3, 5, 7, 14];
 
@@ -43,7 +43,7 @@ export default function ProductDetail() {
         <div className="relative aspect-square overflow-hidden rounded-[2rem] border border-forest/10 bg-cream/50 shadow-soft">
           <ProductImage image={p.image} art={p.art} alt={p.name} />
           <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-forest px-3.5 py-1.5 text-sm font-semibold text-gold">
-            <Zap className="h-4 w-4" /> {etaText(p.deliveryMin, p.deliveryMax)}
+            <MapPin className="h-4 w-4" /> Pickup available
           </span>
         </div>
 
@@ -70,7 +70,7 @@ export default function ProductDetail() {
             <Fact label="Refundable deposit" value={inr(p.deposit)} />
             <Fact label="Replacement value" value={inr(p.replacementValue)} />
             <Fact label="Available" value={`${p.availableStock} of ${p.totalStock}`} />
-            <Fact label="Delivery" value={etaText(p.deliveryMin, p.deliveryMax)} icon />
+            <Fact label="Collection" value="Pickup location" icon />
           </dl>
 
           {/* Rental selector */}
@@ -137,7 +137,7 @@ function Fact({ label, value, icon }: { label: string; value: string; icon?: boo
     <div className="rounded-2xl bg-cream/50 p-3.5">
       <dt className="text-xs font-medium text-forest/60">{label}</dt>
       <dd className="mt-0.5 flex items-center gap-1.5 font-display text-lg font-bold">
-        {icon && <Clock className="h-4 w-4 text-sage" />}
+        {icon && <MapPin className="h-4 w-4 text-sage" />}
         {value}
       </dd>
     </div>

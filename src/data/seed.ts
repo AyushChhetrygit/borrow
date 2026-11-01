@@ -3,10 +3,10 @@ import { calcRentalFee, isHolding } from "../utils";
 
 export const DEFAULT_POLICY = `1. Refundable deposit: every rental includes a security deposit equal to the item's replacement value. It is refunded in full after the item is returned and inspected.
 2. Rental fee: daily price × number of days. For 7+ days the better of the daily or weekly rate is applied automatically.
-3. Late returns: a daily late fee (set by BORROW) is charged for every day past the agreed return date and deducted from the deposit.
+3. Late returns: a fee equal to twice the item’s daily rental price is charged for every day past the agreed return date and deducted from the deposit.
 4. Damaged items: the admin records an appropriate deduction from the deposit after inspection, up to the replacement value.
-5. Lost or unreturned items: charged up to 2× the replacement value (deposit is adjusted first).
-6. Delivery: items are delivered to your hostel or campus address. Delivery times shown are estimates, not guarantees.`;
+5. Lost or unreturned items: charged at the item’s original/replacement value (the deposit is adjusted first).
+6. Pickup: collect your confirmed rental from the pickup location chosen during checkout. We’ll show when it is ready to collect.`;
 
 export const DEFAULT_SETTINGS: Settings = {
   businessName: "BORROW",
@@ -32,51 +32,59 @@ type Seed = [
 ];
 
 const PRODUCT_SEEDS: Seed[] = [
-  ["P001", "Scientific Calculator", "sci-calc", "electronics", 10, 300, 8, "Good", 15, 20,
+  ["P001", "Scientific Calculator", "sci-calc", "electronics", 20, 700, 10, "Good", 15, 20,
     "Casio-style scientific calculator with 240+ functions. Exam-hall friendly and battery included."],
-  ["P002", "Basic Calculator", "calc", "electronics", 5, 150, 10, "Good", 15, 20,
+  ["P002", "Basic Calculator", "calc", "electronics", 5, 150, 5, "Good", 15, 20,
     "Simple 12-digit desktop calculator for quick sums, bills and splitting hostel expenses."],
-  ["P003", "Stapler", "stapler", "study", 5, 100, 6, "Good", 15, 20,
+  ["P003", "Stapler", "stapler", "study", 5, 70, 10, "Good", 15, 20,
     "Sturdy stapler that handles up to 20 sheets. Staples are loaded and ready."],
-  ["P004", "Scissors", "scissors", "study", 5, 120, 6, "Good", 15, 20,
+  ["P004", "Scissors", "scissors", "study", 5, 70, 10, "Good", 15, 20,
     "Sharp stainless-steel scissors for chart paper, crafts and project work."],
-  ["P005", "Cutter", "cutter", "study", 5, 80, 8, "Good", 15, 20,
+  ["P005", "Cutter", "cutter", "study", 5, 70, 10, "Good", 15, 20,
     "Retractable utility cutter with a fresh blade, ideal for model making and posters."],
-  ["P006", "Paint Brushes", "brushes", "study", 5, 200, 5, "Like new", 25, 35,
+  ["P006", "Paint Brushes", "brushes", "study", 7, 80, 15, "Like new", 25, 35,
     "Set of 8 round and flat brushes for watercolour and poster colours."],
-  ["P007", "Charging Cable", "cable", "electronics", 5, 250, 12, "Good", 15, 20,
+  ["P007", "Charging Cable", "cable", "electronics", 5, 120, 15, "Good", 15, 20,
     "Fast-charge USB-C cable, 1.5 m. Works with most Android phones, tablets and earbuds."],
-  ["P008", "Power Bank", "powerbank", "electronics", 15, 800, 6, "Good", 25, 35,
-    "10,000 mAh power bank with two USB ports. Fully charged before every delivery."],
-  ["P009", "HDMI Cable", "hdmi", "electronics", 10, 300, 5, "Good", 25, 35,
+  ["P008", "Power Bank", "powerbank", "electronics", 30, 1000, 5, "Good", 25, 35,
+    "10,000 mAh power bank with two USB ports. Fully charged before every pickup."],
+  ["P009", "HDMI Cable", "hdmi", "electronics", 5, 90, 4, "Good", 25, 35,
     "2 m HDMI cable for presentations, movie nights and connecting laptops to TVs."],
-  ["P010", "Extension Cord", "extension", "electronics", 10, 350, 6, "Good", 25, 35,
+  ["P010", "Extension Cord", "extension", "electronics", 5, 180, 5, "Good", 25, 35,
     "4-socket extension board with surge protection and a 3 m cord."],
-  ["P016", "Collar Microphone", "mic", "electronics", 10, 500, 5, "Good", 25, 35,
+  ["P016", "Collar Microphone", "mic", "electronics", 15, 400, 3, "Good", 25, 35,
     "Clip-on collar microphone for online classes, recordings and presentations."],
-  ["P017", "Portable Speaker", "speaker", "electronics", 20, 1_200, 4, "Good", 25, 35,
+  ["P017", "Portable Speaker", "speaker", "electronics", 25, 800, 5, "Good", 25, 35,
     "Compact Bluetooth speaker for study breaks, hostel rooms and small gatherings."],
   ["P011", "Umbrella", "umbrella", "rain", 10, 250, 10, "Good", 15, 20,
     "Large windproof umbrella with automatic open. Keeps you dry between lectures."],
   ["P018", "Raincoat", "raincoat", "rain", 15, 700, 8, "Good", 15, 20,
     "Lightweight hooded raincoat for wet walks across campus."],
-  ["P012", "Table Tennis Racket", "racket", "sports", 15, 500, 6, "Good", 40, 50,
+  ["P012", "Table Tennis Racket", "racket", "sports", 25, 800, 3, "Good", 40, 50,
     "Tournament-style racket with rubber grip. Balls available on request at the hostel desk."],
-  ["P019", "Volleyball", "volleyball", "sports", 15, 800, 4, "Good", 40, 50,
+  ["P019", "Volleyball", "volleyball", "sports", 10, 300, 3, "Good", 40, 50,
     "Outdoor volleyball, inflated and ready for a quick match."],
-  ["P022", "Basketball", "basketball", "sports", 20, 1_000, 4, "Good", 40, 50,
+  ["P022", "Basketball", "basketball", "sports", 15, 500, 3, "Good", 40, 50,
     "Outdoor basketball, fully inflated and ready for a court session."],
-  ["P020", "Tennis Racket", "tennis", "sports", 20, 1_500, 4, "Good", 40, 50,
+  ["P020", "Tennis Racket", "tennis", "sports", 50, 1_700, 2, "Good", 40, 50,
     "Lightweight tennis racket with a comfortable grip for casual campus games."],
-  ["P021", "Cricket Kit", "cricket", "sports", 30, 2_500, 3, "Good", 40, 50,
+  ["P021", "Cricket Kit", "cricket", "sports", 60, 2_000, 2, "Good", 40, 50,
     "Complete cricket kit with bat, ball, stumps and protective pads."],
-  ["P013", "Chess Board", "chess", "games", 10, 400, 5, "Like new", 40, 50,
+  ["P013", "Chess Board", "chess", "games", 10, 300, 5, "Like new", 40, 50,
     "Foldable wooden chess board with a full set of weighted pieces."],
-  ["P014", "Playing Cards", "cards", "games", 5, 100, 10, "Good", 15, 20,
+  ["P014", "Playing Cards", "cards", "games", 5, 80, 8, "Good", 15, 20,
     "Plastic-coated 52-card deck. Perfect for hostel common-room nights."],
-  ["P015", "Board Games", "boardgame", "games", 15, 600, 4, "Good", 40, 50,
-    "Classic family board game box with all pieces counted and checked before delivery."],
+  ["P015", "Board Games", "boardgame", "games", 35, 1_200, 4, "Good", 40, 50,
+    "Classic family board game box with all pieces counted and checked before pickup."],
 ];
+
+/** Security deposits supplied with the current campus price list. */
+const SECURITY_DEPOSITS: Record<string, number> = {
+  P001: 175, P002: 40, P003: 20, P004: 20, P005: 20, P006: 20,
+  P007: 30, P008: 250, P009: 22, P010: 45, P011: 60, P012: 200,
+  P013: 75, P014: 20, P015: 300, P016: 100, P017: 200, P018: 175,
+  P019: 75, P020: 400, P021: 500, P022: 125,
+};
 
 const CUSTOMERS = [
   { name: "Aarav Mehta", phone: "9876543210", hostel: "Tagore Hostel", room: "Room 214" },
@@ -117,7 +125,7 @@ export function buildSeed(): { products: Product[]; orders: Order[]; settings: S
       art,
       dailyPrice: daily,
       weeklyPrice: Math.round(daily * 5),
-      deposit: replacement,
+      deposit: SECURITY_DEPOSITS[id] ?? Math.round(replacement / 4),
       replacementValue: replacement,
       totalStock: stock,
       availableStock: stock,

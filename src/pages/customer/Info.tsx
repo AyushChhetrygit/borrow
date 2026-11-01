@@ -4,9 +4,9 @@ import { useStore } from "../../context/StoreContext";
 import { inr } from "../../utils";
 
 const FAQS = [
-  ["How does renting work?", "Pick an item, choose how many days you need it, enter your hostel details and place the order. We deliver it, and you return it when you’re done."],
+  ["How does renting work?", "Pick an item, choose how many days you need it, select a pickup location and place the order. We notify you when it is ready to collect, and you return it when you’re done."],
   ["What is the security deposit?", "A refundable amount equal to the item’s replacement value. It is returned after the item is back and inspected."],
-  ["How fast is delivery?", "Each product shows its own estimate, usually 15–20, 25–35 or 40–50 minutes. These are demo estimates, not guarantees."],
+  ["When can I pick up my order?", "We notify you on your order-tracking page when your item is ready to collect from the location you selected."],
   ["What if I return something late?", "A daily late fee applies for each day after the agreed return date and is deducted from your deposit."],
   ["What if I damage or lose an item?", "Damage is assessed at inspection and deducted from the deposit. Lost or unreturned items can be charged up to 2× the replacement value."],
   ["Is this a real service?", "No. BORROW is a student prototype. Orders, payments and deliveries are simulated and stored only in your browser."],
@@ -29,7 +29,7 @@ export default function Info() {
       <div className="space-y-4 leading-relaxed">
         <p>
           {settings.businessName} is a rental platform for college students. Instead of buying a calculator for one exam or a
-          power bank for one trip, you borrow it for a few days, delivered to your hostel.
+          power bank for one trip, you borrow it for a few days and collect it from campus.
         </p>
         <p>
           We combine a simple rental marketplace with the speed of quick-commerce: affordable, convenient and sustainable.
