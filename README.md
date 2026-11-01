@@ -17,33 +17,6 @@ npm run build      # type-check + production build into /dist
 npm run preview    # serve the production build locally
 ```
 
-## Deploy to Vercel
-
-This repository is ready to import into Vercel as a static Vite site. The root-level `vercel.json` declares the exact install command, build command, output folder and the SPA rewrite required by React Router. No environment variables are required.
-
-### Deploy from GitHub (recommended)
-
-1. Create a new GitHub repository and push the contents of this folder to its root. Include `package-lock.json` and `vercel.json`.
-2. Sign in to [Vercel](https://vercel.com), select **Add New → Project**, then import the GitHub repository.
-3. Keep the root directory as `./`. Vercel reads `vercel.json` automatically; it will run `npm ci`, then `npm run build`, and publish `dist`.
-4. Select **Deploy**. Every later push to the production branch creates a new deployment automatically.
-
-### Deploy from the command line
-
-```bash
-npm install -g vercel
-cd /Users/ayushchhetry/Downloads/borrow
-vercel
-```
-
-Follow the prompts to link or create a Vercel project. For the production URL, run:
-
-```bash
-vercel --prod
-```
-
-The rewrite in `vercel.json` ensures that customer and admin routes such as `/catalogue`, `/product/P001`, and `/admin/orders` also work when opened or refreshed directly.
-
 ## Pages
 
 | Area | Routes |
@@ -53,16 +26,6 @@ The rewrite in `vercel.json` ensures that customer and admin routes such as `/ca
 
 There is no login. Use **Admin Dashboard** in the top bar (and **Customer site** in the admin) to switch for demos.
 
-## Demo script (5 minutes)
-
-1. Home → **Explore Catalogue** → search "calc", filter by category.
-2. Open **Scientific Calculator**, pick 3 days → **Rent now**. Fee ₹30 + deposit ₹300 = **₹330**.
-3. Fill the form → **Place order**. See confirmation, order ID, countdown and estimated delivery (15–20 min).
-4. Open `/admin/orders` (ideally in a second tab) and change the order status. The customer tracker updates live.
-   Or press **Demo: simulate delivery progress** on the order page.
-5. Admin → **Products**: add a product with an image URL. It appears on the customer catalogue instantly.
-6. Admin → **Inventory**: add/remove stock or set an item to *Under maintenance*. Customers can no longer rent it.
-7. Admin → **Settings** → **Reset demo data** to start fresh.
 
 ## How the rules work
 
