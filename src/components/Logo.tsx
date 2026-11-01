@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useStore } from "../context/StoreContext";
 
 export function LogoMark({ className = "h-9 w-9" }: { className?: string }) {
-  return <img src="/brand/borrow-logo-cropped.jpg" alt="" className={`${className} rounded-lg object-cover object-left`} />;
+  return <img src="/brand/borrow-mark.jpg" alt="" className={`${className} rounded-lg object-cover`} />;
 }
 
 export function Logo({ to = "/", light = false }: { to?: string; light?: boolean }) {
